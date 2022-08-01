@@ -1,0 +1,72 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}Buy Now{% endblock title %}
+{% block main-content %}
+
+<!-- Start Banner -->
+<div class="hero-wrap hero-bread" style="background-image: url('{% static 'main/images/category-4.jpg' %}');">
+  <div class="container">
+    <div class="row no-gutters slider-text align-items-center justify-content-center">
+      <div class="col-md-9 ftco-animate text-center">
+        <p class="breadcrumbs"><span class="mr-2"><a href="#">Home</a></span> <span>Products</span></p>
+        <h1 class="mb-0 bread">Fruits</h1>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Banner -->
+
+<div class="container my-5">
+ <div class="row">
+  <div class="col-sm-3">
+    <div class="list-group">
+        <a href="{% url 'main:Dried' %}" class="list-group-item list-group-item-action" aria-current="true">
+            All
+        </a>
+        <a href="{% url 'main:DriedData' 'Winter_Season' %}" class="list-group-item list-group-item-action" aria-current="true">
+          Winter Season
+        </a>
+        <a href="{% url 'main:DriedData' 'Below' %}" class="list-group-item list-group-item-action" aria-current="true">
+            Below 500
+        </a>
+        <a href="{% url 'main:DriedData' 'Above' %}" class="list-group-item list-group-item-action" aria-current="true">
+            Above 500
+        </a>
+    </div>
+  </div>
+  <div class="col-sm-8 offset-sm-1">
+    <div class="row">
+        {% for product in dried %}
+        <div class="col-sm-4">
+         <div class="product">
+           <a href="{% url 'main:product-detail' product.id %}" class="img-prod"><img class="img-fluid" src={{product.product_image.url}} alt="" height="200px">
+             <span class="status">{{product.discount_percentage}}%</span>
+             <div class="overlay"></div>
+           </a>
+           <div class="text py-3 pb-4 px-3 text-center">
+             <h3><a href="#">{{product.name}}</a></h3>
+             <div class="d-flex">
+               <div class="pricing">
+                 <p class="price"><span class="mr-2 price-dc">Rs. {{product.selling_price}}</span><span class="price-sale">Rs. {{product.get_sale}}</span></p>
+               </div>
+             </div>
+             <div class="bottom-area d-flex px-3">
+               <div class="m-auto d-flex">
+                <form action="{% url 'cart:cart_add' product.id %}" class="d-inline" method="post">
+                  <input type="submit" class="btn btn-primary shadow px-5 py-2" value="Add To Cart">
+                  {{cart_product_form}}
+                  {% csrf_token %}
+                  
+                  <!-- <button type="submit" class="btn btn-primary shadow px-5 py-2">Add to Cart</button> -->
+                </form>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+        {% endfor %}
+    </div>
+  </div>
+ </div>
+</div>
+{% endblock main-content %}

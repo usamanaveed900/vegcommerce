@@ -1,0 +1,74 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}Buy Now{% endblock title %}
+{% block main-content %}
+<div class="container my-5">
+ <div class="row">
+ <h3>Welcome {{request.user.username.title}}</h3>
+  <div class="col-sm-2 border-end">
+   <ul class="list-unstyled">
+    <li class="d-grid"><a href="{% url 'main:orders' %}" class="btn btn-primary">Orders</a></li>
+    <!-- <ul>
+      <li class="d-grid"><a href="{% url 'main:ordersfilter' 'Pending'  %}" class="btn btn-primary">Pending</a></li>
+      <li class="d-grid"><a href="{% url 'main:ordersfilter' 'Completed' %}" class="btn btn-primary">Completed</a></li>
+      <li class="d-grid"><a href="{% url 'main:ordersfilter' 'Cancel' %}" class="btn btn-primary">Canceled</a></li>
+    </ul> -->
+   </ul>
+  </div>
+  <div class="col-sm-9 offset-sm-1">
+    <div class="row">
+      <!-- Filter buttons -->
+      <div class="Container align-self-center">
+      <a href="{% url 'main:ordersfilter' 'Pending'  %}" class="btn btn-primary">Pending</a>
+      <a href="{% url 'main:ordersfilter' 'Completed' %}" class="btn btn-primary">Completed</a>
+      <a href="{% url 'main:ordersfilter' 'Cancel' %}" class="btn btn-primary">Canceled</a>
+    </div>
+      <table>
+        <tr>
+          <th><a href="{% url 'main:orders' %}">ID</a></th>
+          <th>Order Date</th>
+          <th>Order Status</th>
+        </tr>
+      {% for ord in order %}
+      <tr>
+          <td><a href="{% url 'main:order-detail' ord.id %}">{{ord.id}}</a></td>
+          <td>{{ord.Order_Date}}</td>
+          <td>{{ord.orderStatus}}</td>
+          {% if "Pending" in ord.orderStatus %}
+          {% endif %}
+          {% if "Completed" in ord.orderStatus %}
+          <td> </td>
+          {% endif %}
+          {% if "Cancel" in ord.orderStatus %}
+          <td>
+          </td>
+          <td></td>
+          {% endif %}
+      </tr>
+      {% endfor %}
+    </table>
+    <!-- {% for ord in order %}
+    <div class="col-sm-6">
+      <div class="card">
+       <div class="card-body">
+        <h3>Order {{forloop.counter}}</h3>
+      {% for e in orderde %}
+        {% if ord.id == e.orderID.id %}
+        <p>Product Name: {{e.productID}}</p>
+        <p>Quantity: {{e.quantity}}</p>
+        <p>Price: {{e.price}}</p>
+        <p>Order Status: {{ord.Order_Date}}</p>
+        <p>Order Date: {{ord.orderStatus}}</p>
+        {% endif %}
+      {% endfor %}  
+       </div>
+      </div>
+     </div>
+
+   {% endfor %}  -->
+  </div>
+  </div>
+  
+ </div>
+</div>
+{% endblock main-content %}

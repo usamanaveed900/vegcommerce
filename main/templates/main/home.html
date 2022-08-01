@@ -1,0 +1,234 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}Home{% endblock title %}
+
+{% block banner_slider %}
+<!--Banner Slider-->
+ <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{% static 'main/images/bg_1.jpg' %}" class="d-block w-100" alt="..."> 
+      <!-- <div class="absolute-div no-gutters slider-text align-items-center justify-content-center">
+        <div class="carousel-caption text-center overlay">
+            <h1>VEGEFOODS</h1>
+        </div>
+    </div> -->
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'main/images/bg_2.jpg' %}" class="d-block w-100" alt="...">
+      <!-- <div class="absolute-div">
+        <div class="carousel-caption">
+            <h1>VEGEFOODS</h1>
+        </div>
+    </div> -->
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'main/images/bg_3.jpg' %}" class="d-block w-100" alt="...">
+      <!-- <div class="absolute-div">
+        <div class="carousel-caption">
+            <h1>VEGEFOODS</h1>
+        </div>
+    </div> -->
+    </div>
+ </div>
+  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </a>
+</div>
+
+<!-- End Banner Slider -->
+{% endblock banner_slider %}
+
+
+{% block main-content %}
+<div class="m-3">
+<h2 class="text-center mb-4">Our Products</h2>
+<p class="text-center">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p>
+<div class="mb-5 text-center">
+  <ul class="product-category">
+    <li><a href="#" class="active">All</a></li>
+    <li><a href="{% url 'main:HomeFilter' 'Vegetables'  %}">Vegetables</a></li>
+    <li><a href="{% url 'main:HomeFilter' 'Fruits'  %}">Fruits</a></li>
+    <li><a href="{% url 'main:HomeFilter' 'Dried'  %}">Dried</a></li>
+  </ul>
+</div>
+
+<div class="row" id="search-results">
+  <!-- <div class="row justify-content-center" style="text-align:center">
+    <form class="d-flex col-md-6" id="searchform" method="POST">
+      {% csrf_token %}
+     <div class="input-group mb-3" style="text-align:center">
+    <input name="q" type="text" class="form-control" placeholder="Search" id="search">
+    <button class="btn btn-primary shadow px-5 py-2" type="submit" id="searchsubmit">Search</button>
+     </div>
+  </form>
+  </div> -->
+  <hr style="border-top: 1px solid #ccc; background: transparent;">
+  <div class="row">
+  {% regroup transaction by productID as ProductList %}
+  {% for productID in ProductList %}
+ 
+  <div class="col-sm-3 productID" >
+    <div class="product">
+      <a href="{% url 'main:product-detail' productID.grouper.id %}" class="img-prod"><img class="img-fluid" src={{productID.grouper.product_image.url}} alt="" height="200px">
+        <span class="status id_discount">%</span>
+        <div class="overlay"></div>
+      </a>
+      <div class="text py-3 pb-4 px-3 text-center">
+        <h3><a href="#">{{productID.grouper}}</a></h3>
+        <div class="d-flex text-center">
+          <div class="" style="width: 310px;">
+            <p class="price"><span class="mr-2 price-dc id_price"> </span> Rs. <span class="price-sale"> </span></p>
+          </div>
+        </div>
+          
+         
+         
+        <!-- <div class="bottom-area d-flex px-3">
+          <div class="m-auto d-flex"> -->
+            <form id='transactionIDValue' class="d-inline" method="post">
+              <div class="row">
+                <select class="col-md-8 form-select tranactionID" id="ItemID" style="">
+                  {% for val in productID.list %}
+                      <option transID={{val.id}} price={{val.Price}} discount={{val.discount_percentage}} sale_price={{val.get_sale}} class="price_value" >{{val.AUID}} - {{val.Description}}</option>
+                  {% endfor %}
+                </select>
+              <div class="col-md-4">
+              {{cart_product_form.quantity}}
+            </div>
+              {% csrf_token %}
+              <hr style="border-top: 1px solid #ccc; background: transparent;">
+              <input type="submit" class="btn btn-primary shadow px-5 py-2 Id_submit" value="Add To Cart">
+              <!-- <button type="submit" class="btn btn-primary shadow px-5 py-2">Add to Cart</button> -->
+            </form>
+            
+          </div>
+          <!-- </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+</div>
+
+  <!-- Pagination Start -->
+  <div class="row justify-content-center">
+    <div class="col-1 pagination text-center">
+      {% if transaction.has_previous %}
+        <a class="pagination-action text-center" href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+        <a class="pagination-action text-center" href="?page={{transaction.previous_page_number}}"><i class="fas fa-angle-left"></i></a>
+      {% endif %}
+      {% for num in transaction.paginator.page_range %}
+        {% if transaction.number == num %}
+          <span class="pagination-number pagination-current text-center">{{num}}</span>
+        {% elif num > transaction.number|add:'-3' and num < transaction.number|add:'3' %}
+        <span class="pagination-number text-center">{{num}}</span>
+        {% endif %}
+      {% endfor %}
+      {% if transaction.has_next %}
+        <a class="pagination-action text-center" href="?page={{transaction.next_page_number}}"><i class="fas fa-angle-right"></i></a>
+        <a class="pagination-action text-center" href="?page={{transaction.paginator.num_pages}}"><i class="fas fa-angle-double-right"></i></a>
+      {% endif %}
+    </div>
+  </div>
+    <!-- Pagination End -->
+
+  
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js" 
+          integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" 
+            crossorigin="anonymous"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+  $(document).ready(function(){
+   $(document).on("change", '.tranactionID', function (event) {
+        event.preventDefault();
+        //get closest outer div.. 
+        var selector = $(this).closest(".productID")
+        //find to get required elements..
+        selector.find('.id_price').text($(this).children(":selected").attr("price"));
+        selector.find('.price-sale').text($(this).children(":selected").attr("sale_price"));
+        selector.find('.id_discount').text($(this).children(":selected").attr("discount"));
+        let id = $(this).find("option:selected").attr('transID');
+        let Url = `{% url 'cart:cart_add' 0 %}`.replace(0, id);
+        selector.find("form").attr('action', Url);
+    });
+    $(".tranactionID").trigger("change")
+    $(document).on("click",".Id_submit",function(event){
+      event.preventDefault();
+      var selector = $(this).closest(".productID")
+      console.log(selector.find("form").attr('action'))
+      const form_data = {
+        csrfmiddlewaretoken: $('#transactionIDValue input[name="csrfmiddlewaretoken"]').val()
+      }
+      $.ajax({
+        type : 'POST',
+        url: selector.find("form").attr('action'),
+        data: $(this).closest("form").serialize(),
+        success: function()
+        {
+          
+          swal("Title", "Product Added To Cart!", "success");
+        }
+      });
+      
+    });
+    // $(document).on("click",".Id_search",function(event){
+    //   event.preventDefault();
+    //   $.ajax({
+    //     type : 'GET',
+    //     url: $(this).closest("form").attr('action'),
+    //     data: $(this).closest("form").serialize(),
+    //     success: function()
+    //     {
+    //       // swal("Title", "Product Added To Cart!", "success");
+    //     }
+    //   });
+      
+    // });
+    $('#searchsubmit').on('click', function(e){
+        e.preventDefault();
+        q = $('#search').val();
+        console.log(q);
+        updateContentBySearch(q);
+  });
+  });
+
+
+function updateContentBySearch(q) {
+    var data = {};
+    data['search_by'] = q
+    // /data["csrfmiddlewaretoken"] = $('#searchform [name="csrfmiddlewaretoken"]').val();
+    $.ajax({
+        method: 'POST',
+        url: "{% url 'main:Search' %}",
+        data: {
+          'search_by': q,
+          'csrfmiddlewaretoken' : $("input[name=csrfmiddlewaretoken]").val()
+        },
+        success: function (data) {
+          searchSuccess(data)
+        }
+      });
+
+    }
+    function searchSuccess(data, textStatus,jqXHR)
+    {
+      $('#search-results').html(data);
+    }
+
+</script>
+
+
+{% endblock main-content %}
+
+
+

@@ -1,0 +1,46 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}Buy Now{% endblock title %}
+{% block main-content %}
+<div class="container">
+ <div class="row mt-5">
+  <div class="col-sm-6">
+    <h4>Order Summary</h4>
+    <hr>
+    {% for order in orders %}
+    <div class="row">
+      <div class="col-sm-3 text-center align-self-center">
+        <img src={{order.productID.product_image.url}} alt="" srcset="" class="img-fluid img-thumbnail shadow-sm" height="150" width="150">
+       </div>
+      <div class="col-sm-9">
+       <div>
+        <h5>{{order.productID}}</h5>
+        <p class="mb-2 text-muted small">Description: {{order.productID.description}}</p>
+        <div class="my-3">
+         <label for="quantity">Quantity: {{order.quantity}}</label>
+         <label for="disount">Price: {{order.price}} </label>
+        </div> 
+       </div>
+      </div>
+     </div>
+      {% endfor %} 
+    <small>Term and Condition: Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia, ullam saepe! Iure optio repellat dolor velit, minus rem. Facilis cumque neque numquam laboriosam, accusantium adipisci nisi nihil in et quis?</small>
+  </div>
+  <div class="col-sm-4 offset-sm-1">
+    <h4>Shipping Address</h4>
+    <hr>
+    {% for ad in address %}
+      <div class="card">
+        <div class="card-body">
+        <h5>{{ad.name}}</h5>
+        <p>{{ad.address}}</p>
+        <p>{{ad.phone}}</p>
+        </div>
+        {% endfor %}
+        <div class="d-grid"><a href="{% url 'main:orders' %}" class="btn btn-primary">Continue</a></div>
+      </div>
+       
+    </div>
+  </div>
+</div>
+{% endblock main-content %}

@@ -1,0 +1,69 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}Product Detail{% endblock title %}
+{% block main-content %}
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+<script>
+   $(document).on("change", '.Price', function (event) {
+           event.preventDefault();
+           $('#id_price').text($(this).children(":selected").attr("price"));
+           $('#id_sale_price').text($(this).children(":selected").attr("sale_price"));
+           let id = $('#ItemID').find(":selected").attr('transID');
+           console.log('Id : ',id)
+         let Url = `{% url 'cart:cart_add' 0 %}`.replace(0,id);
+         $('#transactionIDValue').attr('action', Url);
+         let formAction = $('#transactionIDValue').attr('action')
+         let formAction2 = $('#transactionIDValue').prop('action')
+         console.log('form action relative  url : ',formAction)
+         console.log('form action full url : ',formAction2)
+    });
+</script>
+
+
+<div class="container my-5">
+ <div class="row">
+  <div class="col-sm-6 text-center align-self-center">
+   <img src={{product.product_image.url}} alt="" class="img-fluid img-thumbnail">
+   <span class="status">{{product.discount_percentage}} %</span>
+    <div class="overlay"></div>
+  </div>
+  <div class="col-sm-5 offset-sm-1">
+   <h2>Product Title: {{product.name}}</h2>
+   <hr>
+   <p>Description: {{product.description}}</p> <br>
+   <div class="d-flex">
+    <div class="pricing">
+      <p class="price"><span class="mr-2 price-dc" id='id_price'>Rs.  </span><span class="price-sale" id='id_sale_price'>Rs. </span></p>
+    </div>
+  </div>
+   <h4>
+    <select class="Price" id="ItemID" style="width: 250px;">
+      <option value="none" selected disabled hidden>
+        Select an Option
+    </option>
+    {% for item in transaction %}
+    
+      <option transID={{item.id}} price={{item.Price}} sale_price={{item.get_sale}} >{{item.AUID.unit}} - {{item.Description}}</option>
+
+    {% endfor %}
+  </select>
+     <!-- <small class="fw-light text-decoration-line-through">Rs. {{product.selling_price}}  </small> -->
+    </h4> <br>
+    <form id='transactionIDValue' class="d-inline" method="post">
+      {{cart_product_form}}
+      {% csrf_token %}
+      <input type="submit" class="btn btn-primary shadow px-5 py-2" value="Add To Cart">
+      <!-- <button type="submit" class="btn btn-primary shadow px-5 py-2">Add to Cart</button> -->
+    </form>
+   <!-- <a href="{% url 'main:buy-now' %}" class="btn btn-danger shadow px-5 py-2 ms-4">Buy Now</a> -->
+   <h5 class="mt-5">Available Offers</h5>
+   <ul>
+    <li>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</li>
+    <li>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</li>
+    <li>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</li>
+    <li>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</li>
+   </ul>
+  </div>
+ </div>
+</div>
+{% endblock main-content %}

@@ -1,0 +1,40 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}Buy Now{% endblock title %}
+{% block main-content %}
+{% load mathfilters %}
+<div class="container">
+ <div class="row mt-5">
+    <h4>Order Number# {{orderNumber }}</h4>
+    <hr>
+    <table>
+        <tr>
+          <th>Product Name</th>
+          <th>Details</th>
+          <th>Quantity</th>
+          <th>Disount</th>
+          <th>Selling Price</th>
+          <th>Discount Price</th>
+        </tr>
+      {% for order in orderdetail %}
+      <tr>
+          <td>{{order.productID.productID}}</td>
+          <td>{{order.productID.Description}}</td>
+          <td>{{order.quantity}}</td>
+          <td>{{order.productID.discount_percentage}} % </td>
+          <td>{{order.quantity|mul:order.productID.Price }}</td>
+          <td>{{order.price}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    <div class="text-end">
+        <p>Total Amount: {{total_amount.price__sum}}</p>
+    </div>
+    <form action="{% url 'main:orders' %}">
+        <div class="text-end">
+          <button type="submit" class="btn btn-warning mt-3 px-5 fw-bold">Back To Orders</button>
+        </div>
+    </form>
+ </div>
+</div>
+{% endblock main-content %}
