@@ -1,0 +1,81 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}Order Summary{% endblock title %}
+{% block main-content %}
+<div class="container">
+ <div class="row mt-5">
+    <h4>Order Summary</h4>
+    <hr>
+    <table>
+      <thead>
+        <tr>
+          <td></td>
+          <td><h5>Product Name</h5></td>
+          <td><h5>Detail</h5></td>
+          <td><h5>Quantity</h5></td>
+          <td><h5>Price</h5></td>
+          <td><h5>Discount</h5></td>
+          <td><h5>Total</h5></td>
+          <!-- <td></td> -->
+        </tr>
+      </thead>
+      <tbody> 
+        {% for items in cart %}
+        {% with product=items.product %}
+        <tr>
+          <td>
+            <img src={{product.productID.product_image.url}} alt="" srcset="" class="img-fluid img-thumbnail shadow-sm" height="150" width="150">
+          </td>
+          <td>
+           <h5>{{product.productID.name}}</h5>
+          </td>
+          <td>
+            {{product.Description}}
+           </td>
+          <td>
+            {{items.quantity}}
+          </td>
+          <td>
+            Rs. {{items.total_price}}
+          </td>
+          <td>
+            {{items.discountPercent}} %
+          </td>
+          <td>
+            {{items.total_after_discount}}
+          </td>
+          <!-- <td>
+            <a class="remove" href="/cart/change?line=1&amp;quantity=0" data-id="39368016003152">X</a>
+          </td> -->
+        </tr>
+        {% endwith %}
+        {% endfor %}
+      </tbody>
+    </table>
+    <!-- <small>Term and Condition: Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia, ullam saepe! Iure optio repellat dolor velit, minus rem. Facilis cumque neque numquam laboriosam, accusantium adipisci nisi nihil in et quis?</small> -->
+  </div>
+<div class="text-end">
+    <p><strong>Total Amount:</strong> {{cart.get_total_price_discount}}</p>
+</div>
+<form action="{% url 'main:checkout' %}">
+    <div class="text-end">
+      <button type="submit" class="btn btn-warning mt-3 px-5 fw-bold">Place Order</button>
+    </div>
+</form>
+  <!-- <div class="col-sm-4 offset-sm-1">
+    <h4>Shipping Address</h4>
+    <hr>
+    {% for ad in address %}
+      <div class="card">
+        <div class="card-body">
+        <h5>{{ad.name}}</h5>
+        <p>{{ad.address}}</p>
+        <p>{{ad.phone}}</p>
+        </div>
+        {% endfor %}
+        <div class="d-grid"><a href="{% url 'main:orders' %}" class="btn btn-primary">Continue</a></div>
+      </div>
+       
+    </div> -->
+  </div>
+{% endblock main-content %}
